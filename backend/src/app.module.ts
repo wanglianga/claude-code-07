@@ -10,6 +10,7 @@ import { DeliveryModule } from './modules/delivery/delivery.module';
 import { ExceptionsModule } from './modules/exceptions/exceptions.module';
 import { SettlementsModule } from './modules/settlements/settlements.module';
 import { StatsModule } from './modules/stats/stats.module';
+import { HospitalModule } from './modules/hospital/hospital.module';
 import { SeedModule } from './seed/seed.module';
 import { HealthController } from './health.controller';
 
@@ -35,6 +36,7 @@ import { HealthController } from './health.controller';
     ExceptionsModule,
     SettlementsModule,
     StatsModule,
+    HospitalModule,
     SeedModule,
   ],
   controllers: [HealthController],

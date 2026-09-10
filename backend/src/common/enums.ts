@@ -4,6 +4,7 @@ export enum UserRole {
   NUTRITIONIST = 'NUTRITIONIST',
   KITCHEN_STAFF = 'KITCHEN_STAFF',
   VOLUNTEER = 'VOLUNTEER',
+  FAMILY = 'FAMILY', // 家属（可标记自家老人住院/出院）
 }
 
 export enum ElderStatus {
@@ -12,14 +13,50 @@ export enum ElderStatus {
   PAUSED = 'PAUSED', // 暂停
   HOSPITALIZED = 'HOSPITALIZED', // 住院
   VISIT_NEEDED = 'VISIT_NEEDED', // 需上门探访
+  DISCHARGE_PENDING = 'DISCHARGE_PENDING', // 出院待确认（需社区重新确认禁忌与地址后才恢复排餐）
 }
 
-/** 参与排餐的长者状态（暂停/住院不排餐） */
+/** 参与排餐的长者状态（暂停/住院/出院待确认不排餐） */
 export const MEAL_ELIGIBLE_STATUSES: ElderStatus[] = [
   ElderStatus.NORMAL,
   ElderStatus.OBSERVING,
   ElderStatus.VISIT_NEEDED,
 ];
+
+/** 住院记录状态 */
+export enum HospitalRecordStatus {
+  HOSPITALIZED = 'HOSPITALIZED', // 住院中（已停餐）
+  DISCHARGE_PENDING = 'DISCHARGE_PENDING', // 已出院，待社区重新确认后恢复
+  RESUMED = 'RESUMED', // 已恢复送餐
+}
+
+/** 标记渠道 */
+export enum MarkChannel {
+  FAMILY = 'FAMILY', // 家属标记
+  WORKER = 'WORKER', // 社区工作人员/平台标记
+}
+
+/** 住院当日餐所处阶段（决定处置方式） */
+export enum DisposalStage {
+  NOT_PREPARED = 'NOT_PREPARED', // 未备餐（排餐未确认）→ 直接取消
+  PREPARED = 'PREPARED', // 已备餐但未交给志愿者 → 转备用名单或损耗
+  DISPATCHED = 'DISPATCHED', // 已出库交给志愿者 → 志愿者处置
+}
+
+/** 住院当日餐处置方式 */
+export enum DisposalAction {
+  CANCELLED = 'CANCELLED', // 未备餐，直接取消（无损耗）
+  TRANSFER_BACKUP = 'TRANSFER_BACKUP', // 已备餐，转备用名单老人
+  RETURN_KITCHEN = 'RETURN_KITCHEN', // 已出库，退回厨房（损耗）
+  TRANSFER_NEIGHBOR = 'TRANSFER_NEIGHBOR', // 已出库，转交同楼栋老人（计入其送达）
+  DISCARD = 'DISCARD', // 已出库，报损（损耗）
+}
+
+/** 处置单状态 */
+export enum DisposalStatus {
+  PENDING = 'PENDING', // 待志愿者处置
+  DONE = 'DONE', // 已处置
+}
 
 export enum ChewingAbility {
   NORMAL = 'NORMAL', // 正常咀嚼

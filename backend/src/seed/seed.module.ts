@@ -9,6 +9,7 @@ import { MealSchedule } from '../entities/meal-schedule.entity';
 import { DeliveryRoute } from '../entities/delivery-route.entity';
 import { DeliveryTask } from '../entities/delivery-task.entity';
 import { DeliveryException } from '../entities/delivery-exception.entity';
+import { HospitalRecord } from '../entities/hospital-record.entity';
 import { SeedService } from './seed.service';
 
 @Module({
@@ -23,6 +24,7 @@ import { SeedService } from './seed.service';
       DeliveryRoute,
       DeliveryTask,
       DeliveryException,
+      HospitalRecord,
     ]),
   ],
   providers: [SeedService],

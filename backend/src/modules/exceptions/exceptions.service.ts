@@ -104,10 +104,29 @@ export class ExceptionsService {
     }
 
     if (dto.newElderStatus && task) {
+      // 住院/出院必须走「住院管理」流程（停餐联动、当日餐处置、恢复确认）
+      if (
+        [ElderStatus.HOSPITALIZED, ElderStatus.DISCHARGE_PENDING].includes(
+          dto.newElderStatus,
+        )
+      ) {
+        throw new BadRequestException(
+          '住院相关状态请通过「住院管理」登记，以联动停餐与当日餐处置',
+        );
+      }
       const elder = await this.elderRepo.findOne({
         where: { id: task.elderId },
       });
       if (elder && elder.status !== dto.newElderStatus) {
+        if (
+          [ElderStatus.HOSPITALIZED, ElderStatus.DISCHARGE_PENDING].includes(
+            elder.status,
+          )
+        ) {
+          throw new BadRequestException(
+            '该长者处于住院/出院待确认状态，请在「住院管理」中处理',
+          );
+        }
         const from = elder.status;
         elder.status = dto.newElderStatus;
         elder.statusNote = `异常工单#${ex.id}处理：${dto.resolution}`;

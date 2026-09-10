@@ -104,6 +104,24 @@ export class EldersService {
   ) {
     const elder = await this.elderRepo.findOne({ where: { id } });
     if (!elder) throw new NotFoundException('长者档案不存在');
+    // 住院/出院走「住院管理」专门流程（停餐联动、当日餐处置、恢复确认）
+    if (toStatus === ElderStatus.HOSPITALIZED) {
+      throw new BadRequestException(
+        '住院请通过「住院管理」登记，系统将自动联动停餐与当日餐处置',
+      );
+    }
+    if (toStatus === ElderStatus.DISCHARGE_PENDING) {
+      throw new BadRequestException('出院待确认状态由住院管理流程自动流转，不能手动设置');
+    }
+    if (
+      [ElderStatus.HOSPITALIZED, ElderStatus.DISCHARGE_PENDING].includes(
+        elder.status,
+      )
+    ) {
+      throw new BadRequestException(
+        '住院/出院待确认的长者，请在「住院管理」办理出院与恢复确认',
+      );
+    }
     if (elder.status === toStatus) {
       throw new BadRequestException('状态未发生变化');
     }

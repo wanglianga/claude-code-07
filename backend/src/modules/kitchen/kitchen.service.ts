@@ -134,6 +134,8 @@ export class KitchenService {
 
   /**
    * 派单：根据已确认排餐生成配送路线与任务。
+   * 仅处理仍处于"已确认"状态的排餐（已派单的不重复处理），
+   * 因此住院转备用名单后补录的当日建议可再次派单。
    * 路线规则：
    *  - 连续2次及以上无人签收 → 电话确认路线
    *  - 观察/需上门探访 → 安排熟悉情况的志愿者（需经验路线）
@@ -145,11 +147,7 @@ export class KitchenService {
       relations: ['dish'],
     });
     if (schedules.length === 0) {
-      throw new BadRequestException('该日期没有已确认的排餐计划');
-    }
-    const existingRoutes = await this.routeRepo.count({ where: { date } });
-    if (existingRoutes > 0) {
-      throw new BadRequestException('该日期已生成过配送路线，不能重复派单');
+      throw new BadRequestException('该日期没有待派单的已确认排餐计划');
     }
 
     // 每个餐型取第一个已确认排餐作为出餐依据
@@ -199,7 +197,9 @@ export class KitchenService {
 
     const seqCounter: Record<string, number> = {};
     const result: DeliveryRoute[] = [];
-    let routeIndex = 1;
+    // 路线编号接续当日已有路线（支持补派）
+    const existingRouteCount = await this.routeRepo.count({ where: { date } });
+    let routeIndex = existingRouteCount + 1;
     for (const g of groups) {
       const route = await this.routeRepo.save(
         this.routeRepo.create({

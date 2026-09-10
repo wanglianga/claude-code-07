@@ -50,8 +50,13 @@
         <el-table-column label="操作" width="170" fixed="right">
           <template #default="{ row }">
             <template v-if="row.status === 'PENDING' && isOwner && ['ACCEPTED', 'IN_PROGRESS'].includes(detail.status)">
-              <el-button link type="success" @click="openDeliver(row)">送达登记</el-button>
-              <el-button link type="danger" @click="openException(row)">上报异常</el-button>
+              <el-button v-if="hospitalPending.has(row.id)" link type="danger" @click="$router.push('/hospital')">
+                住院待处置，去处理
+              </el-button>
+              <template v-else>
+                <el-button link type="success" @click="openDeliver(row)">送达登记</el-button>
+                <el-button link type="danger" @click="openException(row)">上报异常</el-button>
+              </template>
             </template>
           </template>
         </el-table-column>
@@ -160,8 +165,11 @@ const exceptionForm = ref({ type: 'NOT_HOME', description: '' })
 
 const isOwner = computed(() => detail.value?.volunteerId === auth.user?.id)
 const canStart = computed(() => isOwner.value && detail.value?.status === 'ACCEPTED')
+// 住院联动：待处置餐盒（老人住院）需先到「住院管理」处置
+const hospitalPending = computed(() => new Set(detail.value?.hospitalPendingTaskIds || []))
 
 function rowClass({ row }) {
+  if (hospitalPending.value.has(row.id)) return 'hosp-row'
   return row.status === 'EXCEPTION' ? 'exc-row' : ''
 }
 
@@ -225,4 +233,5 @@ onMounted(load)
 
 <style>
 .exc-row { background: #fef0f0 !important; }
+.hosp-row { background: #fdf6ec !important; }
 </style>

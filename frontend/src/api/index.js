@@ -63,6 +63,20 @@ export const settlementsApi = {
   settle: (id) => http.post(`/settlements/${id}/settle`),
 }
 
+export const hospitalApi = {
+  myElders: () => http.get('/hospital/my-elders'),
+  records: (params) => http.get('/hospital/records', { params }),
+  recordDetail: (id) => http.get(`/hospital/records/${id}`),
+  admit: (data) => http.post('/hospital/admit', data),
+  discharge: (id, data) => http.post(`/hospital/records/${id}/discharge`, data),
+  resume: (id, data) => http.post(`/hospital/records/${id}/resume`, data),
+  disposals: (params) => http.get('/hospital/disposals', { params }),
+  candidates: (id) => http.get(`/hospital/disposals/${id}/candidates`),
+  handle: (id, data) => http.post(`/hospital/disposals/${id}/handle`, data),
+  backupList: () => http.get('/hospital/backup-list'),
+  losses: () => http.get('/hospital/losses'),
+}
+
 export const usersApi = {
   list: (params) => http.get('/users', { params }),
   create: (data) => http.post('/users', data),

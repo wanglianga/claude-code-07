@@ -76,7 +76,8 @@
           </el-col>
           <el-col :span="8"><el-form-item label="出生日期"><el-date-picker v-model="form.birthDate" type="date" value-format="YYYY-MM-DD" style="width: 100%" /></el-form-item></el-col>
           <el-col :span="8"><el-form-item label="联系电话"><el-input v-model="form.phone" /></el-form-item></el-col>
-          <el-col :span="16"><el-form-item label="送餐地址" required><el-input v-model="form.address" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="送餐地址" required><el-input v-model="form.address" /></el-form-item></el-col>
+          <el-col :span="4"><el-form-item label="楼栋"><el-input v-model="form.building" placeholder="如：3栋" /></el-form-item></el-col>
           <el-col :span="12">
             <el-form-item label="慢病情况">
               <el-select v-model="form.chronicDiseases" multiple filterable allow-create default-first-option style="width: 100%" placeholder="选择或输入">
@@ -116,6 +117,11 @@
             </el-form-item>
           </el-col>
           <el-col :span="16"><el-form-item label="送餐备注"><el-input v-model="form.deliveryNote" placeholder="志愿者可见，如：敲门请大声" /></el-form-item></el-col>
+          <el-col :span="24">
+            <el-form-item label="备用名单">
+              <el-checkbox v-model="form.backupEligible">纳入备用名单（其他老人住院时，可接收转出的餐品）</el-checkbox>
+            </el-form-item>
+          </el-col>
         </el-row>
       </el-form>
       <template #footer>
@@ -143,7 +149,8 @@ const query = ref({ keyword: '', status: '' })
 const formVisible = ref(false)
 const saving = ref(false)
 const emptyForm = () => ({
-  id: null, name: '', gender: 'FEMALE', birthDate: '', phone: '', address: '',
+  id: null, name: '', gender: 'FEMALE', birthDate: '', phone: '', address: '', building: '',
+  backupEligible: false,
   chronicDiseases: [], chewingAbility: 'NORMAL', dietaryRestrictions: [], allergies: [],
   emergencyContactName: '', emergencyContactPhone: '', emergencyContactRelation: '',
   subsidyLevel: 'NONE', deliveryNote: '',

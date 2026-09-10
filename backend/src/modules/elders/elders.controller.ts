@@ -10,7 +10,9 @@ import {
 } from '@nestjs/common';
 import {
   IsArray,
+  IsBoolean,
   IsEnum,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -30,6 +32,9 @@ class ElderDto {
   @IsOptional() birthDate?: string;
   @IsOptional() phone?: string;
   @IsNotEmpty({ message: '送餐地址必填' }) address: string;
+  @IsOptional() @IsString() building?: string;
+  @IsOptional() @IsBoolean() backupEligible?: boolean;
+  @IsOptional() @IsInt() familyUserId?: number;
   @IsOptional() @IsArray() chronicDiseases?: string[];
   @IsOptional() @IsEnum(ChewingAbility) chewingAbility?: ChewingAbility;
   @IsOptional() @IsArray() dietaryRestrictions?: string[];

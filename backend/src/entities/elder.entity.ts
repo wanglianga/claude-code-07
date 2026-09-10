@@ -35,6 +35,22 @@ export class Elder {
   @Column()
   address: string;
 
+  /** 楼栋标识（如"3栋"，用于同楼栋转交匹配） */
+  @Column({ nullable: true })
+  building: string;
+
+  /** 是否纳入备用名单（可接收住院老人转出的餐） */
+  @Column({ default: false })
+  backupEligible: boolean;
+
+  /** 关联家属账号（家属可标记住院/出院） */
+  @ManyToOne(() => User, { nullable: true, eager: false })
+  @JoinColumn({ name: 'familyUserId' })
+  familyUser: User;
+
+  @Column({ nullable: true })
+  familyUserId: number;
+
   /** 慢病情况 */
   @Column({ type: 'simple-json', nullable: true })
   chronicDiseases: string[];

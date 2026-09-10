@@ -41,6 +41,7 @@ const accounts = [
   { label: '营养师', u: 'nutrition01', p: '123456' },
   { label: '厨房', u: 'kitchen01', p: '123456' },
   { label: '志愿者', u: 'volunteer01', p: '123456' },
+  { label: '家属', u: 'family01', p: '123456' },
 ]
 
 function fill(u, p) {

@@ -51,8 +51,9 @@ const collapsed = ref(false)
 const roleName = computed(() => ROLE_NAMES[auth.user?.role] || '')
 
 const ALL_MENUS = [
-  { path: '/dashboard', title: '工作台', icon: 'Odometer', roles: null },
+  { path: '/dashboard', title: '工作台', icon: 'Odometer', roles: ['ADMIN', 'COMMUNITY_WORKER', 'NUTRITIONIST', 'KITCHEN_STAFF', 'VOLUNTEER'] },
   { path: '/elders', title: '长者档案', icon: 'UserFilled', roles: ['ADMIN', 'COMMUNITY_WORKER', 'NUTRITIONIST', 'KITCHEN_STAFF'] },
+  { path: '/hospital', title: '住院管理', icon: 'FirstAidKit', roles: ['ADMIN', 'COMMUNITY_WORKER', 'KITCHEN_STAFF', 'VOLUNTEER', 'FAMILY'] },
   { path: '/nutrition', title: '营养建议', icon: 'Apple', roles: ['ADMIN', 'NUTRITIONIST'] },
   { path: '/kitchen', title: '厨房排餐', icon: 'Food', roles: ['ADMIN', 'KITCHEN_STAFF'] },
   { path: '/dishes', title: '菜品管理', icon: 'Dish', roles: ['ADMIN', 'KITCHEN_STAFF'] },

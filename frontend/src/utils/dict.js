@@ -5,6 +5,7 @@ export const ROLE_NAMES = {
   NUTRITIONIST: '营养师',
   KITCHEN_STAFF: '厨房人员',
   VOLUNTEER: '志愿者',
+  FAMILY: '家属',
 }
 
 export const ELDER_STATUS = {
@@ -13,6 +14,38 @@ export const ELDER_STATUS = {
   PAUSED: { label: '暂停', type: 'info' },
   HOSPITALIZED: { label: '住院', type: 'danger' },
   VISIT_NEEDED: { label: '需上门探访', type: 'warning' },
+  DISCHARGE_PENDING: { label: '出院待确认', type: 'warning' },
+}
+
+// 住院联动
+export const HOSPITAL_STATUS = {
+  HOSPITALIZED: { label: '住院中', type: 'danger' },
+  DISCHARGE_PENDING: { label: '出院待确认', type: 'warning' },
+  RESUMED: { label: '已恢复送餐', type: 'success' },
+}
+
+export const MARK_CHANNEL = {
+  FAMILY: '家属标记',
+  WORKER: '社区标记',
+}
+
+export const DISPOSAL_STAGE = {
+  NOT_PREPARED: { label: '未备餐', type: 'info' },
+  PREPARED: { label: '已备餐未出库', type: 'warning' },
+  DISPATCHED: { label: '已出库', type: 'danger' },
+}
+
+export const DISPOSAL_ACTION = {
+  CANCELLED: { label: '直接取消', type: 'info' },
+  TRANSFER_BACKUP: { label: '转备用名单', type: 'success' },
+  RETURN_KITCHEN: { label: '退回厨房', type: 'warning' },
+  TRANSFER_NEIGHBOR: { label: '转交同楼栋老人', type: 'success' },
+  DISCARD: { label: '报损', type: 'danger' },
+}
+
+export const DISPOSAL_STATUS = {
+  PENDING: { label: '待志愿者处置', type: 'danger' },
+  DONE: { label: '已处置', type: 'success' },
 }
 
 export const CHEWING = {

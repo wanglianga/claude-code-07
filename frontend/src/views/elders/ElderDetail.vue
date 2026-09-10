@@ -6,6 +6,11 @@
         {{ elder?.name }} 的档案
       </h2>
       <div class="toolbar" v-if="canEdit && elder">
+        <el-button v-if="!['HOSPITALIZED', 'DISCHARGE_PENDING'].includes(elder.status)"
+          type="danger" plain icon="FirstAidKit" @click="$router.push('/hospital')">住院登记</el-button>
+        <el-button v-else type="primary" plain icon="FirstAidKit" @click="$router.push('/hospital')">
+          {{ elder.status === 'HOSPITALIZED' ? '住院管理（办理出院）' : '住院管理（恢复确认）' }}
+        </el-button>
         <el-button type="warning" plain @click="statusDialog = true">变更状态</el-button>
       </div>
     </div>
@@ -125,8 +130,10 @@
       <el-form label-width="80px">
         <el-form-item label="新状态">
           <el-select v-model="statusForm.status" style="width: 100%">
-            <el-option v-for="(v, k) in ELDER_STATUS" :key="k" :label="v.label" :value="k" :disabled="k === elder?.status" />
+            <el-option v-for="(v, k) in ELDER_STATUS" :key="k" :label="v.label" :value="k"
+              :disabled="k === elder?.status || ['HOSPITALIZED', 'DISCHARGE_PENDING'].includes(k)" />
           </el-select>
+          <div class="muted" style="margin-top: 4px">住院/出院请前往「住院管理」办理，系统将自动联动停餐与当日餐处置</div>
         </el-form-item>
         <el-form-item label="原因">
           <el-input v-model="statusForm.reason" type="textarea" :rows="3" placeholder="如：老人住院 / 家属申请暂停 / 恢复正常送餐" />

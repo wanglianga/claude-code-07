@@ -9,6 +9,7 @@ import { Repository, In } from 'typeorm';
 import { DeliveryRoute } from '../../entities/delivery-route.entity';
 import { DeliveryTask } from '../../entities/delivery-task.entity';
 import { DeliveryException } from '../../entities/delivery-exception.entity';
+import { HospitalDisposal } from '../../entities/hospital-disposal.entity';
 import { Elder } from '../../entities/elder.entity';
 import {
   RouteStatus,
@@ -18,6 +19,7 @@ import {
   ExceptionStatus,
   SignMethod,
   UserRole,
+  DisposalStatus,
 } from '../../common/enums';
 
 @Injectable()
@@ -26,8 +28,18 @@ export class DeliveryService {
     @InjectRepository(DeliveryRoute) private routeRepo: Repository<DeliveryRoute>,
     @InjectRepository(DeliveryTask) private taskRepo: Repository<DeliveryTask>,
     @InjectRepository(DeliveryException) private exceptionRepo: Repository<DeliveryException>,
+    @InjectRepository(HospitalDisposal) private disposalRepo: Repository<HospitalDisposal>,
     @InjectRepository(Elder) private elderRepo: Repository<Elder>,
   ) {}
+
+  /** 任务是否有待处置的住院处置单（有则禁止正常送达/异常操作） */
+  private async pendingDisposalTaskIds(taskIds: number[]): Promise<Set<number>> {
+    if (!taskIds.length) return new Set();
+    const list = await this.disposalRepo.find({
+      where: { taskId: In(taskIds), status: DisposalStatus.PENDING },
+    });
+    return new Set(list.map((d) => d.taskId));
+  }
 
   /** 路线列表：志愿者看待接单+自己的；管理角色看全部 */
   async listRoutes(date: string, user: { id: number; role: UserRole }) {
@@ -74,7 +86,13 @@ export class DeliveryService {
       where: { taskId: In(tasks.map((t) => t.id).concat([0])) },
       order: { createdAt: 'DESC' },
     });
-    return { ...route, tasks, exceptions };
+    const hospitalPending = await this.pendingDisposalTaskIds(tasks.map((t) => t.id));
+    return {
+      ...route,
+      tasks,
+      exceptions,
+      hospitalPendingTaskIds: Array.from(hospitalPending),
+    };
   }
 
   async acceptRoute(id: number, user: { id: number }) {
@@ -132,6 +150,11 @@ export class DeliveryService {
     }
     if (task.status !== TaskStatus.PENDING) {
       throw new BadRequestException('任务已处理，不能重复登记');
+    }
+    if ((await this.pendingDisposalTaskIds([task.id])).size > 0) {
+      throw new BadRequestException(
+        '该餐涉及老人住院，请先在「住院管理」完成餐盒处置（退回厨房/转交同楼栋老人/报损）',
+      );
     }
     if (
       ![RouteStatus.ACCEPTED, RouteStatus.IN_PROGRESS].includes(
@@ -191,6 +214,11 @@ export class DeliveryService {
     }
     if (task.status !== TaskStatus.PENDING) {
       throw new BadRequestException('任务已处理');
+    }
+    if ((await this.pendingDisposalTaskIds([task.id])).size > 0) {
+      throw new BadRequestException(
+        '该餐涉及老人住院，请先在「住院管理」完成餐盒处置（退回厨房/转交同楼栋老人/报损）',
+      );
     }
     task.status = TaskStatus.EXCEPTION;
     await this.taskRepo.save(task);

@@ -43,15 +43,21 @@ data/
 # Claude/Codex local artifacts
 .claude/
 .codex/
+.playwright-cli/
 CLAUDE.md
 PROMPT.txt
 claude-traces/
 traces/
 *_traces/
+Claude 轨迹/
+Claude轨迹/
 session*.jsonl
 *.jsonl
 qa-report*
 qa-artifacts/
+QA/
+QA产物/
+QA 产物/
 
 # Local memory and skills
 memory/
