@@ -1,0 +1,64 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+build/
+target/
+coverage/
+*.tsbuildinfo
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*secret*
+*token*
+*credential*
+*connection-string*
+
+# Logs and caches
+*.log
+logs/
+.cache/
+.npm/
+.pnpm-store/
+.yarn/
+.vite/
+.turbo/
+tmp/
+temp/
+
+# Runtime data
+*.sqlite
+*.sqlite3
+*.db
+pgdata/
+data/
+
+# Claude/Codex local artifacts
+.claude/
+.codex/
+claude-traces/
+traces/
+*_traces/
+session*.jsonl
+*.jsonl
+qa-report*
+qa-artifacts/
+
+# Local memory and skills
+memory/
+memories/
+skill/
+skills/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
