@@ -43,6 +43,8 @@ data/
 # Claude/Codex local artifacts
 .claude/
 .codex/
+CLAUDE.md
+PROMPT.txt
 claude-traces/
 traces/
 *_traces/
